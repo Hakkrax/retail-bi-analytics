@@ -60,7 +60,8 @@ flowchart LR
     B -->|clean.py<br/>8 named rules + audit log| C[(clean lines<br/>1,021,206 rows)]
     C -->|model.py| D[(SQLite star schema)]
     D -->|sql/*.sql via kpis.py| E[query results CSV]
-    D -->|CSV export| F[Tableau Public dashboard]
+    D -->|tableau_data.py<br/>small CSV extracts| F[tableau_workbook.py<br/>generated .twb]
+    F --> I[Tableau Public dashboard]
     E --> G[figures.py<br/>PNG charts]
     C --> H[DATA_QUALITY.md<br/>reconciliation]
 ```
@@ -119,8 +120,9 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
-python -m retail_bi.pipeline     # ~3 min first run (Excel read), ~1.5 min after
-pytest                           # 34 tests
+python -m retail_bi.pipeline         # ~3 min first run (Excel read), ~1.5 min after
+python -m retail_bi.tableau_workbook # Tableau extracts + workbook (~35 s)
+pytest                               # 43 tests
 ```
 
 Outputs:
@@ -128,17 +130,20 @@ Outputs:
 | Path | Contents |
 |---|---|
 | `data/processed/retail.db` | SQLite star schema |
-| `exports/*.csv` | Tables for Tableau / Power BI |
+| `exports/*.csv` | Full star-schema tables (for Power BI or a manual Tableau build) |
+| `tableau/data/*.csv` | Small dashboard extracts, one block per country plus "All countries" |
+| `tableau/retail_dashboard.twb` | Generated Tableau workbook: 14 sheets, 3 dashboards |
 | `reports/query_results/*.csv` | Result of every SQL file |
 | `reports/DATA_QUALITY.md` | Cleaning log and reconciliation |
 | `docs/figures/*.png` | Charts used in this README |
 
 ## Tests
 
-`pytest` runs 34 tests:
+`pytest` runs 43 tests:
 
 - **Cleaning rules:** a 15-row fixture with one deliberate example of every data problem; each rule must catch exactly its row, row counts must be conserved and revenue must reconcile.
 - **Schema and SQL:** the fixture is loaded into a temporary database, foreign keys are checked, every SQL file is executed and key KPIs are asserted against hand-calculated values. Rebuilding twice gives identical results.
+- **Tableau workbook:** extracts reconcile with the SQL KPIs, countries add up to the total, and every field, sheet and parameter the workbook refers to exists. (This checks the file's structure; only Tableau itself can show it renders.)
 - **Full dataset** (skipped until the pipeline has run): no invalid prices or quantities, no duplicate lines, no fee codes, correct date range, reconciliation holds.
 
 ## Project structure
@@ -152,9 +157,12 @@ retail-bi-analytics/
 │   ├── model.py       star schema DDL, SQLite load, CSV exports
 │   ├── kpis.py        runs every sql/*.sql file
 │   ├── figures.py     README / case-study charts
+│   ├── tableau_data.py      dashboard CSV extracts
+│   ├── tableau_workbook.py  generates the .twb workbook
 │   └── pipeline.py    CLI entry point, reconciliation, quality report
 ├── sql/               10 documented analytical queries
 ├── tests/             pytest suite
+├── tableau/           generated workbook + its CSV extracts
 ├── docs/              case study, KPI definitions, Tableau guide, figures
 └── reports/           generated quality report and query results
 ```
