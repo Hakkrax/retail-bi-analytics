@@ -20,7 +20,7 @@ End-to-end BI project on 1.07 million real invoice lines from a UK online gift w
 
 ## Business questions
 
-The company sells giftware online, mostly to wholesalers. Management wants to know:
+The company sells giftware online, mostly to wholesalers. The analysis is framed around the questions its management would ask:
 
 1. How is revenue trending, and how seasonal is it?
 2. How much value is lost to cancellations, and where?
@@ -97,6 +97,8 @@ Every row is either kept or removed by a named rule, and the line value of each 
 | `non_product_code` | 5,863 | Postage, Amazon fees, bank charges, manual adjustments, gift vouchers, test codes |
 | `bad_debt_adjustment` | 6 | Accounting entries (invoice prefix `A`) |
 
+Three more rules (`unparseable`, `stock_adjustment`, `cancel_positive_qty`) are checked on every run and removed nothing in this dataset.
+
 Full log: [reports/DATA_QUALITY.md](reports/DATA_QUALITY.md). Rule rationale and edge cases: [docs/CASE_STUDY.md](docs/CASE_STUDY.md#data-cleaning-decisions).
 
 ## SQL analyses
@@ -120,7 +122,7 @@ KPI formulas (SQL, Tableau and Power BI DAX versions): [docs/KPI_DEFINITIONS.md]
 
 ## Run it
 
-Requires Python 3.10+. The dataset (45.6 MB) is downloaded on first run.
+Requires Python 3.11 or 3.12 (both tested in CI). The dataset (45.6 MB) is downloaded on first run.
 
 ```bash
 python -m venv .venv
@@ -176,6 +178,6 @@ retail-bi-analytics/
 
 ## Data source and licence
 
-Chen, D. (2012). *Online Retail II* [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D — licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The data is downloaded at run time and is not stored in this repository.
+Chen, D. (2012). *Online Retail II* [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D — licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The data is downloaded at run time, is not stored in this repository and is not covered by the code licence.
 
 Code: MIT licence (see [LICENSE](LICENSE)).
