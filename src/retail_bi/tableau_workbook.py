@@ -37,7 +37,11 @@ PARAM = "[Parameters].[Parameter 1]"
 DASH_W, DASH_H = 1200, 950
 EXTRACT_POSITION = "before_layout"  # Tableau 2026.3 schema: after the columns, before <layout>
 EXTRACT_DIR = TABLEAU_DIR / "extracts"
-DEVICE_PREVIEW: list[str] = []  # extra elements after <active> in dashboard windows
+DEVICE_PREVIEW: list[str] = []
+CAPTIONS = {"month_start": "Date", "product_rank": "#", "market_rank": "#", "segment_rank": "#",
+            "weekday_num": "#", "hour_of_day": "Hour", "top_customers_pct": "Top % of customers",
+            "months_since_first": "Months since first purchase", "cohort_month": "Cohort"}
+FOCUS: str | None = None  # window open on load (default: first dashboard); for visual checks  # extra elements after <active> in dashboard windows
 
 GBP = 'c"£"#,##0;-"£"#,##0'
 GBP2 = 'c"£"#,##0.00;-"£"#,##0.00'
@@ -136,7 +140,7 @@ class Source:
                 col = Col(name, "string", "dimension", "nominal")
             if name in self.dims:
                 col.role, col.type = "dimension", "ordinal"
-            col.caption = name.replace("_", " ").capitalize()
+            col.caption = CAPTIONS.get(name, name.replace("_", " ").capitalize())
             col.fmt = self.formats.get(name)
             self.cols[name] = col
         if self.scoped:
@@ -329,6 +333,16 @@ class Sheet:
             deps.append(tag("datasource-dependencies", {"datasource": "Parameters"}, [_PARAMETER_DEP]))
         return deps
 
+    def _table_style(self) -> str:
+        if not self.big_number:
+            return tag("style")
+        return tag("style", None, [tag("style-rule", {"element": "cell"}, [
+            tag("format", {"attr": "font-size", "value": "20"}),
+            tag("format", {"attr": "font-weight", "value": "bold"}),
+            tag("format", {"attr": "text-align", "value": "center"}),
+            tag("format", {"attr": "vertical-align", "value": "center"}),
+        ])])
+
     @staticmethod
     def _shelf(refs: list[Ref]) -> str:
         if not refs:
@@ -362,11 +376,6 @@ class Sheet:
         pane = [tag("view", None, [tag("breakdown", {"value": "auto"})]), tag("mark", {"class": self.mark})]
         if encodings:
             pane.append(tag("encodings", None, encodings))
-        if self.big_number and self.text:
-            pane.append(tag("customized-label", None, [tag("formatted-text", None, [
-                tag("run", {"bold": "true", "fontcolor": "#0b0b0b", "fontsize": "24"},
-                    escape(f"<{self.text.full}>")),
-            ])]))
         if self.text and not self.big_number:
             pane.append(tag("style", None, [tag("style-rule", {"element": "mark"}, [
                 tag("format", {"attr": "mark-labels-show", "value": "true"}),
@@ -374,7 +383,7 @@ class Sheet:
 
         table = tag("table", None, [
             tag("view", None, view),
-            tag("style"),
+            self._table_style(),
             tag("panes", None, [tag("pane", {"selection-relaxation-option": "selection-relaxation-allow"}, pane)]),
             tag("rows", None, escape(self._shelf(self.rows)) or None),
             tag("cols", None, escape(self._shelf(self.cols)) or None),
@@ -387,39 +396,67 @@ class Sheet:
 @dataclass
 class Zone:
     kind: str  # sheet | text | param
-    x: int
-    y: int
-    w: int
-    h: int
+    w: int  # width in pixels within its row
     sheet: str | None = None
     runs: list[tuple[str, dict]] = field(default_factory=list)
+    show_title: bool = True
+
+
+@dataclass
+class Row:
+    h: int  # height in pixels
+    zones: list[Zone]
 
 
 @dataclass
 class Dashboard:
+    """A fixed-size dashboard: a vertical stack of rows, each a horizontal row of zones."""
+
     name: str
-    zones: list[Zone]
+    rows: list[Row]
+
+    @property
+    def zones(self) -> list[Zone]:
+        return [z for r in self.rows for z in r.zones]
 
     def xml(self) -> str:
-        def box(z: Zone, zid: int) -> dict:
-            return {"h": round(z.h * 100000 / DASH_H), "id": zid, "w": round(z.w * 100000 / DASH_W),
-                    "x": round(z.x * 100000 / DASH_W), "y": round(z.y * 100000 / DASH_H)}
+        ids = iter(range(2, 1000))
 
-        children = []
-        for i, z in enumerate(self.zones, start=2):
-            attrs = box(z, i)
+        def box(x: int, y: int, w: int, h: int) -> dict:
+            return {"h": round(h * 100000 / DASH_H), "id": next(ids), "w": round(w * 100000 / DASH_W),
+                    "x": round(x * 100000 / DASH_W), "y": round(y * 100000 / DASH_H)}
+
+        def leaf(z: Zone, x: int, y: int, h: int, fixed: int) -> str:
+            attrs = {**box(x, y, z.w, h), "fixed-size": fixed, "is-fixed": "true"}
             if z.kind == "sheet":
-                children.append(tag("zone", {**attrs, "name": z.sheet}))
-            elif z.kind == "param":
-                children.append(tag("zone", {**attrs, "mode": "compact", "param": PARAM, "type": "paramctrl"}))
+                return tag("zone", {**attrs, "name": z.sheet, "show-title": None if z.show_title else "false"})
+            if z.kind == "param":
+                return tag("zone", {**attrs, "mode": "compact", "param": PARAM, "type": "paramctrl"})
+            runs = []
+            for j, (text, style) in enumerate(z.runs):
+                if j:
+                    runs.append(tag("run", None, "Æ&#10;"))
+                runs.append(tag("run", style, escape(text)))
+            return tag("zone", {**attrs, "type": "text"}, [tag("formatted-text", None, runs)])
+
+        rows, y = [], 0
+        for row in self.rows:
+            if sum(z.w for z in row.zones) != DASH_W:
+                raise ValueError(f"{self.name}: row widths must add up to {DASH_W}")
+            x, leaves = 0, []
+            for z in row.zones:
+                leaves.append(leaf(z, x, y, row.h, row.h if len(row.zones) == 1 else z.w))
+                x += z.w
+            if len(leaves) == 1:
+                rows.append(leaves[0])
             else:
-                runs = []
-                for j, (text, style) in enumerate(z.runs):
-                    if j:
-                        runs.append(tag("run", None, "Æ&#10;"))
-                    runs.append(tag("run", style, escape(text)))
-                children.append(tag("zone", {**attrs, "type": "text"}, [tag("formatted-text", None, runs)]))
-        root = tag("zone", {"h": 100000, "id": 1, "type": "layout-basic", "w": 100000, "x": 0, "y": 0}, children)
+                rows.append(tag("zone", {**box(0, y, DASH_W, row.h), "fixed-size": row.h, "is-fixed": "true",
+                                         "param": "horz", "type": "layout-flow"}, leaves))
+            y += row.h
+        if y != DASH_H:
+            raise ValueError(f"{self.name}: row heights must add up to {DASH_H}")
+        stack = tag("zone", {**box(0, 0, DASH_W, DASH_H), "param": "vert", "type": "layout-flow"}, rows)
+        root = tag("zone", {"h": 100000, "id": 1, "type": "layout-basic", "w": 100000, "x": 0, "y": 0}, [stack])
         size = {"maxheight": DASH_H, "maxwidth": DASH_W, "minheight": DASH_H, "minwidth": DASH_W}
         return tag("dashboard", {"name": self.name}, [tag("style"), tag("size", size), tag("zones", None, [root])])
 
@@ -497,21 +534,21 @@ def _sheets(s: dict[str, Source]) -> list[Sheet]:
         Sheet("Top Products", "Top 15 products by net revenue", prod, "Bar",
               rows=[Ref(prod, "product_rank", "none"), Ref(prod, "description", "none")],
               cols=[Ref(prod, "net_revenue")], text=Ref(prod, "net_revenue"),
-              tooltips=[Ref(prod, "stock_code", "none"), Ref(prod, "units_sold")]),
-        Sheet("RFM Segments", "Historical revenue by RFM segment", rfm, "Bar",
+              tooltips=[Ref(prod, "units_sold")]),
+        Sheet("RFM Segments", "Historical revenue by RFM segment (label = share of revenue)", rfm, "Bar",
               rows=[Ref(rfm, "segment_rank", "none"), Ref(rfm, "segment", "none")],
-              cols=[Ref(rfm, "revenue")], text=Ref(rfm, "customers"),
-              tooltips=[Ref(rfm, "revenue_share")]),
+              cols=[Ref(rfm, "revenue")], text=Ref(rfm, "revenue_share"),
+              tooltips=[Ref(rfm, "customers")]),
         Sheet("Revenue Concentration", "Share of revenue from the top X% of customers", par, "Bar",
               rows=[Ref(par, "revenue_share")],
-              cols=[Ref(par, "top_customers_pct", "none"), Ref(par, "top_label", "none")],
+              cols=[Ref(par, "top_customers_pct", "none")],
               text=Ref(par, "revenue_share"), tooltips=[Ref(par, "customers"), Ref(par, "net_revenue")]),
         Sheet("Cohort Retention", "Share of each monthly cohort buying again, by months since first purchase",
               coh, "Square",
               rows=[Ref(coh, "cohort_month", "none")], cols=[Ref(coh, "months_since_first", "none")],
               color=Ref(coh, "retention", "avg"), text=Ref(coh, "retention", "avg"),
               tooltips=[Ref(coh, "cohort_size"), Ref(coh, "active_customers")]),
-        Sheet("New vs Returning", "Monthly net revenue: new vs returning customers", nvr, "Bar",
+        Sheet("New vs Returning", "Monthly net revenue: new customers (blue) vs returning (orange)", nvr, "Bar",
               rows=[Ref(nvr, "net_revenue")], cols=[Ref(nvr, "month_start", "tmn")],
               color=Ref(nvr, "customer_type", "none"), tooltips=[Ref(nvr, "customers")]),
         Sheet("Cancellations by Month", "Value cancelled by month (complete months)", mon, "Bar",
@@ -540,22 +577,20 @@ def _note(text: str) -> list[tuple[str, dict]]:
 def _dashboards() -> list[Dashboard]:
     kpis = ["KPI Net Revenue", "KPI Orders", "KPI AOV", "KPI Cancellation Rate", "KPI Customers"]
     overview = [
-        Zone("text", 0, 0, 900, 60, runs=_title("Online Retail: Sales Overview",
-                                                 "UK online giftware wholesaler, 1 Dec 2009 to 9 Dec 2011, GBP")),
-        Zone("param", 920, 10, 270, 50),
-        *[Zone("sheet", i * 240, 60, 240, 110, sheet=name) for i, name in enumerate(kpis)],
-        Zone("sheet", 0, 170, 1200, 330, sheet="Monthly Net Revenue"),
-        Zone("sheet", 0, 500, 1200, 400, sheet="Top Products"),
-        Zone("text", 0, 900, 1200, 50, runs=_note(SOURCE_LINE)),
+        Row(70, [Zone("text", 900, runs=_title("Online Retail: Sales Overview",
+                                               "UK online giftware wholesaler, 1 Dec 2009 to 9 Dec 2011, GBP")),
+                 Zone("param", 300)]),
+        Row(110, [Zone("sheet", 240, sheet=name) for name in kpis]),
+        Row(310, [Zone("sheet", 1200, sheet="Monthly Net Revenue")]),
+        Row(420, [Zone("sheet", 1200, sheet="Top Products")]),
+        Row(40, [Zone("text", 1200, runs=_note(SOURCE_LINE))]),
     ]
     customers = [
-        Zone("text", 0, 0, 1200, 60, runs=_title("Online Retail: Customers",
-                                                  "Known customers only (78% of lines carry a customer ID)")),
-        Zone("sheet", 0, 60, 600, 290, sheet="RFM Segments"),
-        Zone("sheet", 600, 60, 600, 290, sheet="Revenue Concentration"),
-        Zone("sheet", 0, 350, 1200, 330, sheet="Cohort Retention"),
-        Zone("sheet", 0, 680, 800, 270, sheet="New vs Returning"),
-        Zone("text", 810, 690, 390, 250, runs=[
+        Row(70, [Zone("text", 1200, runs=_title("Online Retail: Customers",
+                                                "Known customers only (78% of lines carry a customer ID)"))]),
+        Row(290, [Zone("sheet", 600, sheet="RFM Segments"), Zone("sheet", 600, sheet="Revenue Concentration")]),
+        Row(320, [Zone("sheet", 1200, sheet="Cohort Retention")]),
+        Row(270, [Zone("sheet", 800, sheet="New vs Returning"), Zone("text", 400, runs=[
             ("What the data says", {"bold": "true", "fontsize": "12"}),
             ("Top 1% of customers (59 accounts) = 31% of net revenue; top 20% = 77%.", {"fontsize": "10"}),
             ("813 'At risk' customers bought often but not recently: £1.52M of historical revenue.",
@@ -563,18 +598,18 @@ def _dashboards() -> list[Dashboard]:
             ("Median next-month retention of a monthly cohort is about 20%.", {"fontsize": "10"}),
             ("Dec 2009 cohort includes customers who bought before the data starts.",
              {"fontcolor": "#52514e", "fontsize": "9"}),
-        ]),
+        ])]),
     ]
     operations = [
-        Zone("text", 0, 0, 900, 60, runs=_title("Online Retail: Operations",
-                                                 "Cancellations, order timing and export markets")),
-        Zone("param", 920, 10, 270, 50),
-        Zone("sheet", 0, 60, 1200, 290, sheet="Cancellations by Month"),
-        Zone("sheet", 0, 350, 1200, 270, sheet="Order Timing"),
-        Zone("sheet", 0, 620, 1200, 280, sheet="Markets"),
-        Zone("text", 0, 900, 1200, 50, runs=_note(
+        Row(70, [Zone("text", 900, runs=_title("Online Retail: Operations",
+                                               "Cancellations, order timing and export markets")),
+                 Zone("param", 300)]),
+        Row(240, [Zone("sheet", 1200, sheet="Cancellations by Month")]),
+        Row(230, [Zone("sheet", 1200, sheet="Order Timing")]),
+        Row(370, [Zone("sheet", 1200, sheet="Markets")]),
+        Row(40, [Zone("text", 1200, runs=_note(
             "Two bulk orders cancelled within minutes (Jan 2011, Dec 2011) are about a third of all cancelled "
-            "value. Order timing and markets cover all countries and ignore the Country selector.")),
+            "value. Order timing and markets cover all countries and ignore the Country selector."))]),
     ]
     return [Dashboard("Sales Overview", overview), Dashboard("Customers", customers),
             Dashboard("Operations", operations)]
@@ -590,13 +625,18 @@ def _windows(sheets: list[Sheet], dashboards: list[Dashboard]) -> str:
             tag("strip", {"size": "31"}, [tag("card", {"type": "title"})]),
         ]),
     ])
-    windows = [tag("window", {"class": "worksheet", "hidden": "true", "maximized": "true", "name": s.name}, [cards])
-               for s in sheets]
+    fit = tag("zoom", {"type": "entire-view"})
+    focus = FOCUS or dashboards[0].name
+    windows = []
+    for sheet in sheets:
+        attrs = {"class": "worksheet", "hidden": None if sheet.name == focus else "true",
+                 "maximized": "true" if sheet.name == focus else None, "name": sheet.name}
+        windows.append(tag("window", attrs, [cards, tag("viewpoint", None, [fit])]))
     # Tableau's schema: a dashboard window is (viewpoints, active, device-preview).
-    for i, d in enumerate(dashboards):
+    for d in dashboards:
         viewpoints = tag("viewpoints", None,
-                         [tag("viewpoint", {"name": z.sheet}) for z in d.zones if z.kind == "sheet"])
-        windows.append(tag("window", {"class": "dashboard", "maximized": "true" if i == 0 else None,
+                         [tag("viewpoint", {"name": z.sheet}, [fit]) for z in d.zones if z.kind == "sheet"])
+        windows.append(tag("window", {"class": "dashboard", "maximized": "true" if d.name == focus else None,
                                       "name": d.name}, [viewpoints, tag("active", {"id": "-1"}), *DEVICE_PREVIEW]))
     return tag("windows", {"source-height": "30"}, windows)
 
@@ -608,7 +648,10 @@ def build(data_dir: Path = TABLEAU_DATA_DIR, out_path: Path = WORKBOOK_PATH,
     for src in sources.values():
         src.load_columns(data_dir)
         if extract_dir is not None:
-            src.write_hyper(data_dir, extract_dir)
+            hyper, csv = extract_dir / f"{src.stem}.hyper", data_dir / src.filename
+            # Skip up-to-date extracts: Tableau locks the .hyper files while the workbook is open.
+            if not hyper.exists() or hyper.stat().st_mtime < csv.stat().st_mtime:
+                src.write_hyper(data_dir, extract_dir)
     scopes = pd.read_csv(data_dir / "kpi_by_country.csv")["scope"].tolist()
     if scopes[0] != ALL_SCOPE:
         raise ValueError(f"first scope must be {ALL_SCOPE!r}")

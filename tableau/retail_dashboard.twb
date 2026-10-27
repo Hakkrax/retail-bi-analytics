@@ -77,7 +77,7 @@
 <column datatype="integer" name="orders" ordinal="5" /></columns></relation></connection>
 <aliases enabled="yes" />
 <column caption="Scope" datatype="string" name="[scope]" role="dimension" type="nominal" />
-<column caption="Month start" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
+<column caption="Date" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
 <column caption="Gross sales" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[gross_sales]" role="measure" type="quantitative" />
 <column caption="Cancelled value" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[cancelled_value]" role="measure" type="quantitative" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
@@ -96,7 +96,7 @@
 <column datatype="integer" name="units_sold" ordinal="5" /></columns></relation></connection>
 <aliases enabled="yes" />
 <column caption="Scope" datatype="string" name="[scope]" role="dimension" type="nominal" />
-<column caption="Product rank" datatype="integer" name="[product_rank]" role="dimension" type="ordinal" />
+<column caption="#" datatype="integer" name="[product_rank]" role="dimension" type="ordinal" />
 <column caption="Stock code" datatype="string" name="[stock_code]" role="dimension" type="nominal" />
 <column caption="Description" datatype="string" name="[description]" role="dimension" type="nominal" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
@@ -113,7 +113,7 @@
 <column datatype="integer" name="customers" ordinal="4" />
 <column datatype="real" name="avg_order_value" ordinal="5" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Market rank" datatype="integer" name="[market_rank]" role="dimension" type="ordinal" />
+<column caption="#" datatype="integer" name="[market_rank]" role="dimension" type="ordinal" />
 <column caption="Country" datatype="string" name="[country]" role="dimension" type="nominal" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
 <column caption="Orders" datatype="integer" default-format="n#,##0;-#,##0" name="[orders]" role="measure" type="quantitative" />
@@ -129,9 +129,9 @@
 <column datatype="integer" name="orders" ordinal="3" />
 <column datatype="real" name="gross_sales" ordinal="4" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Weekday num" datatype="integer" name="[weekday_num]" role="dimension" type="ordinal" />
+<column caption="#" datatype="integer" name="[weekday_num]" role="dimension" type="ordinal" />
 <column caption="Day" datatype="string" name="[day]" role="dimension" type="nominal" />
-<column caption="Hour of day" datatype="integer" name="[hour_of_day]" role="dimension" type="ordinal" />
+<column caption="Hour" datatype="integer" name="[hour_of_day]" role="dimension" type="ordinal" />
 <column caption="Orders" datatype="integer" default-format="n#,##0;-#,##0" name="[orders]" role="measure" type="quantitative" />
 <column caption="Gross sales" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[gross_sales]" role="measure" type="quantitative" />
 <extract count="-1" enabled="true" units="records"><connection access_mode="readonly" author-locale="en_GB" class="hyper" dbname="C:/Users/LENOVO/OneDrive/Desktop/App/data-portfolio/retail-bi-analytics/tableau/extracts/order_timing.hyper" default-settings="hyper" schema="Extract" sslmode="" tablename="Extract" update-time="10/27/2026 12:00:00 PM" username="tableau"><relation name="Extract" table="[Extract].[Extract]" type="table" />
@@ -144,7 +144,7 @@
 <column datatype="real" name="revenue" ordinal="3" />
 <column datatype="real" name="revenue_share" ordinal="4" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Segment rank" datatype="integer" name="[segment_rank]" role="dimension" type="ordinal" />
+<column caption="#" datatype="integer" name="[segment_rank]" role="dimension" type="ordinal" />
 <column caption="Segment" datatype="string" name="[segment]" role="dimension" type="nominal" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
 <column caption="Revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[revenue]" role="measure" type="quantitative" />
@@ -159,8 +159,8 @@
 <column datatype="integer" name="active_customers" ordinal="3" />
 <column datatype="real" name="retention" ordinal="4" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Cohort month" datatype="string" name="[cohort_month]" role="dimension" type="nominal" />
-<column caption="Months since first" datatype="integer" name="[months_since_first]" role="dimension" type="ordinal" />
+<column caption="Cohort" datatype="string" name="[cohort_month]" role="dimension" type="nominal" />
+<column caption="Months since first purchase" datatype="integer" name="[months_since_first]" role="dimension" type="ordinal" />
 <column caption="Cohort size" datatype="integer" default-format="n#,##0;-#,##0" name="[cohort_size]" role="measure" type="quantitative" />
 <column caption="Active customers" datatype="integer" default-format="n#,##0;-#,##0" name="[active_customers]" role="measure" type="quantitative" />
 <column caption="Retention" datatype="real" default-format="p0%" name="[retention]" role="measure" type="quantitative" />
@@ -173,7 +173,7 @@
 <column datatype="integer" name="customers" ordinal="2" />
 <column datatype="real" name="net_revenue" ordinal="3" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Month start" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
+<column caption="Date" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
 <column caption="Customer type" datatype="string" name="[customer_type]" role="dimension" type="nominal" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
@@ -187,7 +187,7 @@
 <column datatype="real" name="net_revenue" ordinal="3" />
 <column datatype="real" name="revenue_share" ordinal="4" /></columns></relation></connection>
 <aliases enabled="yes" />
-<column caption="Top customers pct" datatype="integer" name="[top_customers_pct]" role="dimension" type="ordinal" />
+<column caption="Top % of customers" datatype="integer" name="[top_customers_pct]" role="dimension" type="ordinal" />
 <column caption="Top label" datatype="string" name="[top_label]" role="dimension" type="nominal" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
@@ -207,11 +207,13 @@
 <filter class="categorical" column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]"><groupfilter function="member" level="[none:Calculation_scope_match:nk]" member="true" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate" /></filter>
 <slices><column>[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]</column></slices>
 <aggregation value="true" /></view>
-<style />
+<style><style-rule element="cell"><format attr="font-size" value="20" />
+<format attr="font-weight" value="bold" />
+<format attr="text-align" value="center" />
+<format attr="vertical-align" value="center" /></style-rule></style>
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Text" />
-<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:net_revenue:qk]" /></encodings>
-<customized-label><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="24">&lt;[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:net_revenue:qk]&gt;</run></formatted-text></customized-label></pane></panes>
+<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:net_revenue:qk]" /></encodings></pane></panes>
 <rows />
 <cols /></table></worksheet>
 <worksheet name="KPI Orders"><layout-options><title><formatted-text><run bold="true" fontsize="12">Orders</run></formatted-text></title></layout-options>
@@ -226,11 +228,13 @@
 <filter class="categorical" column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]"><groupfilter function="member" level="[none:Calculation_scope_match:nk]" member="true" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate" /></filter>
 <slices><column>[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]</column></slices>
 <aggregation value="true" /></view>
-<style />
+<style><style-rule element="cell"><format attr="font-size" value="20" />
+<format attr="font-weight" value="bold" />
+<format attr="text-align" value="center" />
+<format attr="vertical-align" value="center" /></style-rule></style>
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Text" />
-<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:orders:qk]" /></encodings>
-<customized-label><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="24">&lt;[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:orders:qk]&gt;</run></formatted-text></customized-label></pane></panes>
+<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:orders:qk]" /></encodings></pane></panes>
 <rows />
 <cols /></table></worksheet>
 <worksheet name="KPI AOV"><layout-options><title><formatted-text><run bold="true" fontsize="12">Average order value</run></formatted-text></title></layout-options>
@@ -247,11 +251,13 @@
 <filter class="categorical" column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]"><groupfilter function="member" level="[none:Calculation_scope_match:nk]" member="true" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate" /></filter>
 <slices><column>[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]</column></slices>
 <aggregation value="true" /></view>
-<style />
+<style><style-rule element="cell"><format attr="font-size" value="20" />
+<format attr="font-weight" value="bold" />
+<format attr="text-align" value="center" />
+<format attr="vertical-align" value="center" /></style-rule></style>
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Text" />
-<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_aov:qk]" /></encodings>
-<customized-label><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="24">&lt;[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_aov:qk]&gt;</run></formatted-text></customized-label></pane></panes>
+<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_aov:qk]" /></encodings></pane></panes>
 <rows />
 <cols /></table></worksheet>
 <worksheet name="KPI Cancellation Rate"><layout-options><title><formatted-text><run bold="true" fontsize="12">Cancellation rate</run></formatted-text></title></layout-options>
@@ -268,11 +274,13 @@
 <filter class="categorical" column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]"><groupfilter function="member" level="[none:Calculation_scope_match:nk]" member="true" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate" /></filter>
 <slices><column>[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]</column></slices>
 <aggregation value="true" /></view>
-<style />
+<style><style-rule element="cell"><format attr="font-size" value="20" />
+<format attr="font-weight" value="bold" />
+<format attr="text-align" value="center" />
+<format attr="vertical-align" value="center" /></style-rule></style>
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Text" />
-<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_cancel_rate:qk]" /></encodings>
-<customized-label><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="24">&lt;[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_cancel_rate:qk]&gt;</run></formatted-text></customized-label></pane></panes>
+<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[usr:Calculation_cancel_rate:qk]" /></encodings></pane></panes>
 <rows />
 <cols /></table></worksheet>
 <worksheet name="KPI Customers"><layout-options><title><formatted-text><run bold="true" fontsize="12">Known customers</run></formatted-text></title></layout-options>
@@ -287,18 +295,20 @@
 <filter class="categorical" column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]"><groupfilter function="member" level="[none:Calculation_scope_match:nk]" member="true" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate" /></filter>
 <slices><column>[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[none:Calculation_scope_match:nk]</column></slices>
 <aggregation value="true" /></view>
-<style />
+<style><style-rule element="cell"><format attr="font-size" value="20" />
+<format attr="font-weight" value="bold" />
+<format attr="text-align" value="center" />
+<format attr="vertical-align" value="center" /></style-rule></style>
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Text" />
-<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:customers:qk]" /></encodings>
-<customized-label><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="24">&lt;[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:customers:qk]&gt;</run></formatted-text></customized-label></pane></panes>
+<encodings><text column="[federated.2rorjnxyugsm7ipnuwjfpywtmzpc].[sum:customers:qk]" /></encodings></pane></panes>
 <rows />
 <cols /></table></worksheet>
 <worksheet name="Monthly Net Revenue"><layout-options><title><formatted-text><run bold="true" fontsize="12">Net revenue by month (complete months)</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Monthly sales by country" name="federated.yiwzg3xpiyupoe3wbcj5foigr2ad" />
 <datasource name="Parameters" /></datasources>
 <datasource-dependencies datasource="federated.yiwzg3xpiyupoe3wbcj5foigr2ad"><column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
-<column caption="Month start" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
+<column caption="Date" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
 <column caption="Orders" datatype="integer" default-format="n#,##0;-#,##0" name="[orders]" role="measure" type="quantitative" />
 <column caption="Gross sales" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[gross_sales]" role="measure" type="quantitative" />
 <column caption="Selected country" datatype="boolean" name="[Calculation_scope_match]" role="dimension" type="nominal"><calculation class="tableau" formula="[scope] = [Parameters].[Parameter 1]" /></column>
@@ -322,17 +332,15 @@
 <worksheet name="Top Products"><layout-options><title><formatted-text><run bold="true" fontsize="12">Top 15 products by net revenue</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Top products by country" name="federated.z5xhrl3j3n3ieiwhxaewwqesm4aw" />
 <datasource name="Parameters" /></datasources>
-<datasource-dependencies datasource="federated.z5xhrl3j3n3ieiwhxaewwqesm4aw"><column caption="Product rank" datatype="integer" name="[product_rank]" role="dimension" type="ordinal" />
+<datasource-dependencies datasource="federated.z5xhrl3j3n3ieiwhxaewwqesm4aw"><column caption="#" datatype="integer" name="[product_rank]" role="dimension" type="ordinal" />
 <column caption="Description" datatype="string" name="[description]" role="dimension" type="nominal" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
-<column caption="Stock code" datatype="string" name="[stock_code]" role="dimension" type="nominal" />
 <column caption="Units sold" datatype="integer" default-format="n#,##0;-#,##0" name="[units_sold]" role="measure" type="quantitative" />
 <column caption="Selected country" datatype="boolean" name="[Calculation_scope_match]" role="dimension" type="nominal"><calculation class="tableau" formula="[scope] = [Parameters].[Parameter 1]" /></column>
 <column caption="Scope" datatype="string" name="[scope]" role="dimension" type="nominal" />
 <column-instance column="[product_rank]" derivation="None" name="[none:product_rank:ok]" pivot="key" type="ordinal" />
 <column-instance column="[description]" derivation="None" name="[none:description:nk]" pivot="key" type="nominal" />
 <column-instance column="[net_revenue]" derivation="Sum" name="[sum:net_revenue:qk]" pivot="key" type="quantitative" />
-<column-instance column="[stock_code]" derivation="None" name="[none:stock_code:nk]" pivot="key" type="nominal" />
 <column-instance column="[units_sold]" derivation="Sum" name="[sum:units_sold:qk]" pivot="key" type="quantitative" />
 <column-instance column="[Calculation_scope_match]" derivation="None" name="[none:Calculation_scope_match:nk]" pivot="key" type="nominal" /></datasource-dependencies>
 <datasource-dependencies datasource="Parameters"><column caption="Country" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;All countries&quot;"><calculation class="tableau" formula="&quot;All countries&quot;" /></column></datasource-dependencies>
@@ -343,42 +351,39 @@
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Bar" />
 <encodings><text column="[federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[sum:net_revenue:qk]" />
-<tooltip column="[federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[none:stock_code:nk]" />
 <tooltip column="[federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[sum:units_sold:qk]" /></encodings>
 <style><style-rule element="mark"><format attr="mark-labels-show" value="true" /></style-rule></style></pane></panes>
 <rows>([federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[none:product_rank:ok] / [federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[none:description:nk])</rows>
 <cols>[federated.z5xhrl3j3n3ieiwhxaewwqesm4aw].[sum:net_revenue:qk]</cols></table></worksheet>
-<worksheet name="RFM Segments"><layout-options><title><formatted-text><run bold="true" fontsize="12">Historical revenue by RFM segment</run></formatted-text></title></layout-options>
+<worksheet name="RFM Segments"><layout-options><title><formatted-text><run bold="true" fontsize="12">Historical revenue by RFM segment (label = share of revenue)</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="RFM segments" name="federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj" /></datasources>
-<datasource-dependencies datasource="federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj"><column caption="Segment rank" datatype="integer" name="[segment_rank]" role="dimension" type="ordinal" />
+<datasource-dependencies datasource="federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj"><column caption="#" datatype="integer" name="[segment_rank]" role="dimension" type="ordinal" />
 <column caption="Segment" datatype="string" name="[segment]" role="dimension" type="nominal" />
 <column caption="Revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[revenue]" role="measure" type="quantitative" />
-<column caption="Revenue share" datatype="real" default-format="p0%" name="[revenue_share]" role="measure" type="quantitative" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
+<column caption="Revenue share" datatype="real" default-format="p0%" name="[revenue_share]" role="measure" type="quantitative" />
 <column-instance column="[segment_rank]" derivation="None" name="[none:segment_rank:ok]" pivot="key" type="ordinal" />
 <column-instance column="[segment]" derivation="None" name="[none:segment:nk]" pivot="key" type="nominal" />
 <column-instance column="[revenue]" derivation="Sum" name="[sum:revenue:qk]" pivot="key" type="quantitative" />
-<column-instance column="[revenue_share]" derivation="Sum" name="[sum:revenue_share:qk]" pivot="key" type="quantitative" />
-<column-instance column="[customers]" derivation="Sum" name="[sum:customers:qk]" pivot="key" type="quantitative" /></datasource-dependencies>
+<column-instance column="[customers]" derivation="Sum" name="[sum:customers:qk]" pivot="key" type="quantitative" />
+<column-instance column="[revenue_share]" derivation="Sum" name="[sum:revenue_share:qk]" pivot="key" type="quantitative" /></datasource-dependencies>
 <aggregation value="true" /></view>
 <style />
 <panes><pane selection-relaxation-option="selection-relaxation-allow"><view><breakdown value="auto" /></view>
 <mark class="Bar" />
-<encodings><text column="[federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[sum:customers:qk]" />
-<tooltip column="[federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[sum:revenue_share:qk]" /></encodings>
+<encodings><text column="[federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[sum:revenue_share:qk]" />
+<tooltip column="[federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[sum:customers:qk]" /></encodings>
 <style><style-rule element="mark"><format attr="mark-labels-show" value="true" /></style-rule></style></pane></panes>
 <rows>([federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[none:segment_rank:ok] / [federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[none:segment:nk])</rows>
 <cols>[federated.xz2zsw3qmwbn5llyu5k5dkj6nhrj].[sum:revenue:qk]</cols></table></worksheet>
 <worksheet name="Revenue Concentration"><layout-options><title><formatted-text><run bold="true" fontsize="12">Share of revenue from the top X% of customers</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Customer concentration" name="federated.ipep5r42nlo2pblxkpzdn7wszlit" /></datasources>
 <datasource-dependencies datasource="federated.ipep5r42nlo2pblxkpzdn7wszlit"><column caption="Revenue share" datatype="real" default-format="p0%" name="[revenue_share]" role="measure" type="quantitative" />
-<column caption="Top customers pct" datatype="integer" name="[top_customers_pct]" role="dimension" type="ordinal" />
-<column caption="Top label" datatype="string" name="[top_label]" role="dimension" type="nominal" />
+<column caption="Top % of customers" datatype="integer" name="[top_customers_pct]" role="dimension" type="ordinal" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
 <column-instance column="[revenue_share]" derivation="Sum" name="[sum:revenue_share:qk]" pivot="key" type="quantitative" />
 <column-instance column="[top_customers_pct]" derivation="None" name="[none:top_customers_pct:ok]" pivot="key" type="ordinal" />
-<column-instance column="[top_label]" derivation="None" name="[none:top_label:nk]" pivot="key" type="nominal" />
 <column-instance column="[customers]" derivation="Sum" name="[sum:customers:qk]" pivot="key" type="quantitative" />
 <column-instance column="[net_revenue]" derivation="Sum" name="[sum:net_revenue:qk]" pivot="key" type="quantitative" /></datasource-dependencies>
 <aggregation value="true" /></view>
@@ -390,11 +395,11 @@
 <tooltip column="[federated.ipep5r42nlo2pblxkpzdn7wszlit].[sum:net_revenue:qk]" /></encodings>
 <style><style-rule element="mark"><format attr="mark-labels-show" value="true" /></style-rule></style></pane></panes>
 <rows>[federated.ipep5r42nlo2pblxkpzdn7wszlit].[sum:revenue_share:qk]</rows>
-<cols>([federated.ipep5r42nlo2pblxkpzdn7wszlit].[none:top_customers_pct:ok] / [federated.ipep5r42nlo2pblxkpzdn7wszlit].[none:top_label:nk])</cols></table></worksheet>
+<cols>[federated.ipep5r42nlo2pblxkpzdn7wszlit].[none:top_customers_pct:ok]</cols></table></worksheet>
 <worksheet name="Cohort Retention"><layout-options><title><formatted-text><run bold="true" fontsize="12">Share of each monthly cohort buying again, by months since first purchase</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Cohort retention" name="federated.daxd22vozcym4dxabixv6y4nab2u" /></datasources>
-<datasource-dependencies datasource="federated.daxd22vozcym4dxabixv6y4nab2u"><column caption="Cohort month" datatype="string" name="[cohort_month]" role="dimension" type="nominal" />
-<column caption="Months since first" datatype="integer" name="[months_since_first]" role="dimension" type="ordinal" />
+<datasource-dependencies datasource="federated.daxd22vozcym4dxabixv6y4nab2u"><column caption="Cohort" datatype="string" name="[cohort_month]" role="dimension" type="nominal" />
+<column caption="Months since first purchase" datatype="integer" name="[months_since_first]" role="dimension" type="ordinal" />
 <column caption="Cohort size" datatype="integer" default-format="n#,##0;-#,##0" name="[cohort_size]" role="measure" type="quantitative" />
 <column caption="Active customers" datatype="integer" default-format="n#,##0;-#,##0" name="[active_customers]" role="measure" type="quantitative" />
 <column caption="Retention" datatype="real" default-format="p0%" name="[retention]" role="measure" type="quantitative" />
@@ -414,10 +419,10 @@
 <style><style-rule element="mark"><format attr="mark-labels-show" value="true" /></style-rule></style></pane></panes>
 <rows>[federated.daxd22vozcym4dxabixv6y4nab2u].[none:cohort_month:nk]</rows>
 <cols>[federated.daxd22vozcym4dxabixv6y4nab2u].[none:months_since_first:ok]</cols></table></worksheet>
-<worksheet name="New vs Returning"><layout-options><title><formatted-text><run bold="true" fontsize="12">Monthly net revenue: new vs returning customers</run></formatted-text></title></layout-options>
+<worksheet name="New vs Returning"><layout-options><title><formatted-text><run bold="true" fontsize="12">Monthly net revenue: new customers (blue) vs returning (orange)</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="New vs returning" name="federated.kxxz3sdb6khltsoy5eatxppuex25" /></datasources>
 <datasource-dependencies datasource="federated.kxxz3sdb6khltsoy5eatxppuex25"><column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
-<column caption="Month start" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
+<column caption="Date" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
 <column caption="Customer type" datatype="string" name="[customer_type]" role="dimension" type="nominal" />
 <column-instance column="[net_revenue]" derivation="Sum" name="[sum:net_revenue:qk]" pivot="key" type="quantitative" />
@@ -437,7 +442,7 @@
 <datasource name="Parameters" /></datasources>
 <datasource-dependencies datasource="federated.yiwzg3xpiyupoe3wbcj5foigr2ad"><column caption="Value cancelled" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[Calculation_value_cancelled]" role="measure" type="quantitative"><calculation class="tableau" formula="-SUM([cancelled_value])" /></column>
 <column caption="Cancelled value" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[cancelled_value]" role="measure" type="quantitative" />
-<column caption="Month start" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
+<column caption="Date" datatype="date" name="[month_start]" role="dimension" type="ordinal" />
 <column caption="Gross sales" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[gross_sales]" role="measure" type="quantitative" />
 <column caption="Selected country" datatype="boolean" name="[Calculation_scope_match]" role="dimension" type="nominal"><calculation class="tableau" formula="[scope] = [Parameters].[Parameter 1]" /></column>
 <column caption="Scope" datatype="string" name="[scope]" role="dimension" type="nominal" />
@@ -457,9 +462,9 @@
 <cols>[federated.yiwzg3xpiyupoe3wbcj5foigr2ad].[tmn:month_start:qk]</cols></table></worksheet>
 <worksheet name="Order Timing"><layout-options><title><formatted-text><run bold="true" fontsize="12">Orders by weekday and hour (UK time)</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Order timing" name="federated.4xyqn27ycof57szov65rk2jat2r2" /></datasources>
-<datasource-dependencies datasource="federated.4xyqn27ycof57szov65rk2jat2r2"><column caption="Weekday num" datatype="integer" name="[weekday_num]" role="dimension" type="ordinal" />
+<datasource-dependencies datasource="federated.4xyqn27ycof57szov65rk2jat2r2"><column caption="#" datatype="integer" name="[weekday_num]" role="dimension" type="ordinal" />
 <column caption="Day" datatype="string" name="[day]" role="dimension" type="nominal" />
-<column caption="Hour of day" datatype="integer" name="[hour_of_day]" role="dimension" type="ordinal" />
+<column caption="Hour" datatype="integer" name="[hour_of_day]" role="dimension" type="ordinal" />
 <column caption="Gross sales" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[gross_sales]" role="measure" type="quantitative" />
 <column caption="Orders" datatype="integer" default-format="n#,##0;-#,##0" name="[orders]" role="measure" type="quantitative" />
 <column-instance column="[weekday_num]" derivation="None" name="[none:weekday_num:ok]" pivot="key" type="ordinal" />
@@ -477,7 +482,7 @@
 <cols>[federated.4xyqn27ycof57szov65rk2jat2r2].[none:hour_of_day:ok]</cols></table></worksheet>
 <worksheet name="Markets"><layout-options><title><formatted-text><run bold="true" fontsize="12">Top 15 markets outside the UK (whole period)</run></formatted-text></title></layout-options>
 <table><view><datasources><datasource caption="Markets outside the UK" name="federated.2tsrarbiwgvcv7jpmongfnqgmicw" /></datasources>
-<datasource-dependencies datasource="federated.2tsrarbiwgvcv7jpmongfnqgmicw"><column caption="Market rank" datatype="integer" name="[market_rank]" role="dimension" type="ordinal" />
+<datasource-dependencies datasource="federated.2tsrarbiwgvcv7jpmongfnqgmicw"><column caption="#" datatype="integer" name="[market_rank]" role="dimension" type="ordinal" />
 <column caption="Country" datatype="string" name="[country]" role="dimension" type="nominal" />
 <column caption="Net revenue" datatype="real" default-format="c&quot;£&quot;#,##0;-&quot;£&quot;#,##0" name="[net_revenue]" role="measure" type="quantitative" />
 <column caption="Customers" datatype="integer" default-format="n#,##0;-#,##0" name="[customers]" role="measure" type="quantitative" />
@@ -502,28 +507,28 @@
 <cols>[federated.2tsrarbiwgvcv7jpmongfnqgmicw].[sum:net_revenue:qk]</cols></table></worksheet></worksheets>
 <dashboards><dashboard name="Sales Overview"><style />
 <size maxheight="950" maxwidth="1200" minheight="950" minwidth="1200" />
-<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="6316" id="2" w="75000" x="0" y="0" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Sales Overview</run>
+<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="100000" id="14" w="100000" x="0" y="0" param="vert" type="layout-flow"><zone h="7368" id="4" w="100000" x="0" y="0" fixed-size="70" is-fixed="true" param="horz" type="layout-flow"><zone h="7368" id="2" w="75000" x="0" y="0" fixed-size="900" is-fixed="true" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Sales Overview</run>
 <run>Æ&#10;</run>
 <run fontcolor="#52514e" fontsize="10">UK online giftware wholesaler, 1 Dec 2009 to 9 Dec 2011, GBP</run></formatted-text></zone>
-<zone h="5263" id="3" w="22500" x="76667" y="1053" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" />
-<zone h="11579" id="4" w="20000" x="0" y="6316" name="KPI Net Revenue" />
-<zone h="11579" id="5" w="20000" x="20000" y="6316" name="KPI Orders" />
-<zone h="11579" id="6" w="20000" x="40000" y="6316" name="KPI AOV" />
-<zone h="11579" id="7" w="20000" x="60000" y="6316" name="KPI Cancellation Rate" />
-<zone h="11579" id="8" w="20000" x="80000" y="6316" name="KPI Customers" />
-<zone h="34737" id="9" w="100000" x="0" y="17895" name="Monthly Net Revenue" />
-<zone h="42105" id="10" w="100000" x="0" y="52632" name="Top Products" />
-<zone h="5263" id="11" w="100000" x="0" y="94737" type="text"><formatted-text><run fontcolor="#52514e" fontsize="9">Source: Chen, D. (2012) Online Retail II, UCI Machine Learning Repository, CC BY 4.0. Net revenue = sales minus cancellations. The data has no cost column, so no margin is shown.</run></formatted-text></zone></zone></zones></dashboard>
+<zone h="7368" id="3" w="25000" x="75000" y="0" fixed-size="300" is-fixed="true" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" /></zone>
+<zone h="11579" id="10" w="100000" x="0" y="7368" fixed-size="110" is-fixed="true" param="horz" type="layout-flow"><zone h="11579" id="5" w="20000" x="0" y="7368" fixed-size="240" is-fixed="true" name="KPI Net Revenue" />
+<zone h="11579" id="6" w="20000" x="20000" y="7368" fixed-size="240" is-fixed="true" name="KPI Orders" />
+<zone h="11579" id="7" w="20000" x="40000" y="7368" fixed-size="240" is-fixed="true" name="KPI AOV" />
+<zone h="11579" id="8" w="20000" x="60000" y="7368" fixed-size="240" is-fixed="true" name="KPI Cancellation Rate" />
+<zone h="11579" id="9" w="20000" x="80000" y="7368" fixed-size="240" is-fixed="true" name="KPI Customers" /></zone>
+<zone h="32632" id="11" w="100000" x="0" y="18947" fixed-size="310" is-fixed="true" name="Monthly Net Revenue" />
+<zone h="44211" id="12" w="100000" x="0" y="51579" fixed-size="420" is-fixed="true" name="Top Products" />
+<zone h="4211" id="13" w="100000" x="0" y="95789" fixed-size="40" is-fixed="true" type="text"><formatted-text><run fontcolor="#52514e" fontsize="9">Source: Chen, D. (2012) Online Retail II, UCI Machine Learning Repository, CC BY 4.0. Net revenue = sales minus cancellations. The data has no cost column, so no margin is shown.</run></formatted-text></zone></zone></zone></zones></dashboard>
 <dashboard name="Customers"><style />
 <size maxheight="950" maxwidth="1200" minheight="950" minwidth="1200" />
-<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="6316" id="2" w="100000" x="0" y="0" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Customers</run>
+<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="100000" id="10" w="100000" x="0" y="0" param="vert" type="layout-flow"><zone h="7368" id="2" w="100000" x="0" y="0" fixed-size="70" is-fixed="true" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Customers</run>
 <run>Æ&#10;</run>
 <run fontcolor="#52514e" fontsize="10">Known customers only (78% of lines carry a customer ID)</run></formatted-text></zone>
-<zone h="30526" id="3" w="50000" x="0" y="6316" name="RFM Segments" />
-<zone h="30526" id="4" w="50000" x="50000" y="6316" name="Revenue Concentration" />
-<zone h="34737" id="5" w="100000" x="0" y="36842" name="Cohort Retention" />
-<zone h="28421" id="6" w="66667" x="0" y="71579" name="New vs Returning" />
-<zone h="26316" id="7" w="32500" x="67500" y="72632" type="text"><formatted-text><run bold="true" fontsize="12">What the data says</run>
+<zone h="30526" id="5" w="100000" x="0" y="7368" fixed-size="290" is-fixed="true" param="horz" type="layout-flow"><zone h="30526" id="3" w="50000" x="0" y="7368" fixed-size="600" is-fixed="true" name="RFM Segments" />
+<zone h="30526" id="4" w="50000" x="50000" y="7368" fixed-size="600" is-fixed="true" name="Revenue Concentration" /></zone>
+<zone h="33684" id="6" w="100000" x="0" y="37895" fixed-size="320" is-fixed="true" name="Cohort Retention" />
+<zone h="28421" id="9" w="100000" x="0" y="71579" fixed-size="270" is-fixed="true" param="horz" type="layout-flow"><zone h="28421" id="7" w="66667" x="0" y="71579" fixed-size="800" is-fixed="true" name="New vs Returning" />
+<zone h="28421" id="8" w="33333" x="66667" y="71579" fixed-size="400" is-fixed="true" type="text"><formatted-text><run bold="true" fontsize="12">What the data says</run>
 <run>Æ&#10;</run>
 <run fontsize="10">Top 1% of customers (59 accounts) = 31% of net revenue; top 20% = 77%.</run>
 <run>Æ&#10;</run>
@@ -531,115 +536,129 @@
 <run>Æ&#10;</run>
 <run fontsize="10">Median next-month retention of a monthly cohort is about 20%.</run>
 <run>Æ&#10;</run>
-<run fontcolor="#52514e" fontsize="9">Dec 2009 cohort includes customers who bought before the data starts.</run></formatted-text></zone></zone></zones></dashboard>
+<run fontcolor="#52514e" fontsize="9">Dec 2009 cohort includes customers who bought before the data starts.</run></formatted-text></zone></zone></zone></zone></zones></dashboard>
 <dashboard name="Operations"><style />
 <size maxheight="950" maxwidth="1200" minheight="950" minwidth="1200" />
-<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="6316" id="2" w="75000" x="0" y="0" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Operations</run>
+<zones><zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0"><zone h="100000" id="9" w="100000" x="0" y="0" param="vert" type="layout-flow"><zone h="7368" id="4" w="100000" x="0" y="0" fixed-size="70" is-fixed="true" param="horz" type="layout-flow"><zone h="7368" id="2" w="75000" x="0" y="0" fixed-size="900" is-fixed="true" type="text"><formatted-text><run bold="true" fontcolor="#0b0b0b" fontsize="18">Online Retail: Operations</run>
 <run>Æ&#10;</run>
 <run fontcolor="#52514e" fontsize="10">Cancellations, order timing and export markets</run></formatted-text></zone>
-<zone h="5263" id="3" w="22500" x="76667" y="1053" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" />
-<zone h="30526" id="4" w="100000" x="0" y="6316" name="Cancellations by Month" />
-<zone h="28421" id="5" w="100000" x="0" y="36842" name="Order Timing" />
-<zone h="29474" id="6" w="100000" x="0" y="65263" name="Markets" />
-<zone h="5263" id="7" w="100000" x="0" y="94737" type="text"><formatted-text><run fontcolor="#52514e" fontsize="9">Two bulk orders cancelled within minutes (Jan 2011, Dec 2011) are about a third of all cancelled value. Order timing and markets cover all countries and ignore the Country selector.</run></formatted-text></zone></zone></zones></dashboard></dashboards>
-<windows source-height="30"><window class="worksheet" hidden="true" maximized="true" name="KPI Net Revenue"><cards><edge name="left"><strip size="160"><card type="pages" />
+<zone h="7368" id="3" w="25000" x="75000" y="0" fixed-size="300" is-fixed="true" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" /></zone>
+<zone h="25263" id="5" w="100000" x="0" y="7368" fixed-size="240" is-fixed="true" name="Cancellations by Month" />
+<zone h="24211" id="6" w="100000" x="0" y="32632" fixed-size="230" is-fixed="true" name="Order Timing" />
+<zone h="38947" id="7" w="100000" x="0" y="56842" fixed-size="370" is-fixed="true" name="Markets" />
+<zone h="4211" id="8" w="100000" x="0" y="95789" fixed-size="40" is-fixed="true" type="text"><formatted-text><run fontcolor="#52514e" fontsize="9">Two bulk orders cancelled within minutes (Jan 2011, Dec 2011) are about a third of all cancelled value. Order timing and markets cover all countries and ignore the Country selector.</run></formatted-text></zone></zone></zone></zones></dashboard></dashboards>
+<windows source-height="30"><window class="worksheet" hidden="true" name="KPI Net Revenue"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="KPI Orders"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="KPI Orders"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="KPI AOV"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="KPI AOV"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="KPI Cancellation Rate"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="KPI Cancellation Rate"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="KPI Customers"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="KPI Customers"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Monthly Net Revenue"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Monthly Net Revenue"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Top Products"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Top Products"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="RFM Segments"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="RFM Segments"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Revenue Concentration"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Revenue Concentration"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Cohort Retention"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Cohort Retention"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="New vs Returning"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="New vs Returning"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Cancellations by Month"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Cancellations by Month"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Order Timing"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Order Timing"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="worksheet" hidden="true" maximized="true" name="Markets"><cards><edge name="left"><strip size="160"><card type="pages" />
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="worksheet" hidden="true" name="Markets"><cards><edge name="left"><strip size="160"><card type="pages" />
 <card type="filters" />
 <card type="marks" /></strip></edge>
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
-<strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="dashboard" maximized="true" name="Sales Overview"><viewpoints><viewpoint name="KPI Net Revenue" />
-<viewpoint name="KPI Orders" />
-<viewpoint name="KPI AOV" />
-<viewpoint name="KPI Cancellation Rate" />
-<viewpoint name="KPI Customers" />
-<viewpoint name="Monthly Net Revenue" />
-<viewpoint name="Top Products" /></viewpoints>
+<strip size="31"><card type="title" /></strip></edge></cards>
+<viewpoint><zoom type="entire-view" /></viewpoint></window>
+<window class="dashboard" maximized="true" name="Sales Overview"><viewpoints><viewpoint name="KPI Net Revenue"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="KPI Orders"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="KPI AOV"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="KPI Cancellation Rate"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="KPI Customers"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Monthly Net Revenue"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Top Products"><zoom type="entire-view" /></viewpoint></viewpoints>
 <active id="-1" /></window>
-<window class="dashboard" name="Customers"><viewpoints><viewpoint name="RFM Segments" />
-<viewpoint name="Revenue Concentration" />
-<viewpoint name="Cohort Retention" />
-<viewpoint name="New vs Returning" /></viewpoints>
+<window class="dashboard" name="Customers"><viewpoints><viewpoint name="RFM Segments"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Revenue Concentration"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Cohort Retention"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="New vs Returning"><zoom type="entire-view" /></viewpoint></viewpoints>
 <active id="-1" /></window>
-<window class="dashboard" name="Operations"><viewpoints><viewpoint name="Cancellations by Month" />
-<viewpoint name="Order Timing" />
-<viewpoint name="Markets" /></viewpoints>
+<window class="dashboard" name="Operations"><viewpoints><viewpoint name="Cancellations by Month"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Order Timing"><zoom type="entire-view" /></viewpoint>
+<viewpoint name="Markets"><zoom type="entire-view" /></viewpoint></viewpoints>
 <active id="-1" /></window></windows></workbook>
