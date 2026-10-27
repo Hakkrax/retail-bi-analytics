@@ -120,6 +120,17 @@ def test_dashboards_point_at_real_sheets(workbook):
     assert used == sheet_names  # every sheet is placed on a dashboard
 
 
+def test_dashboard_windows_follow_tableau_schema(workbook):
+    """Tableau 2026.3 rejected <active> without <viewpoints> before it."""
+    root, _ = workbook
+    for window in root.find("windows"):
+        children = [c.tag for c in window]
+        if window.get("class") == "dashboard":
+            assert children[:2] == ["viewpoints", "active"], children
+        else:
+            assert children[0] == "cards", children
+
+
 def test_country_parameter_lists_every_scope(workbook, extracts):
     root, _ = workbook
     frames, _, _ = extracts

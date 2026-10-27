@@ -608,6 +608,20 @@
 <edge name="top"><strip size="2147483647"><card type="columns" /></strip>
 <strip size="2147483647"><card type="rows" /></strip>
 <strip size="31"><card type="title" /></strip></edge></cards></window>
-<window class="dashboard" maximized="true" name="Sales Overview"><active id="-1" /></window>
-<window class="dashboard" name="Customers"><active id="-1" /></window>
-<window class="dashboard" name="Operations"><active id="-1" /></window></windows></workbook>
+<window class="dashboard" maximized="true" name="Sales Overview"><viewpoints><viewpoint name="KPI Net Revenue" />
+<viewpoint name="KPI Orders" />
+<viewpoint name="KPI AOV" />
+<viewpoint name="KPI Cancellation Rate" />
+<viewpoint name="KPI Customers" />
+<viewpoint name="Monthly Net Revenue" />
+<viewpoint name="Top Products" /></viewpoints>
+<active id="-1" /></window>
+<window class="dashboard" name="Customers"><viewpoints><viewpoint name="RFM Segments" />
+<viewpoint name="Revenue Concentration" />
+<viewpoint name="Cohort Retention" />
+<viewpoint name="New vs Returning" /></viewpoints>
+<active id="-1" /></window>
+<window class="dashboard" name="Operations"><viewpoints><viewpoint name="Cancellations by Month" />
+<viewpoint name="Order Timing" />
+<viewpoint name="Markets" /></viewpoints>
+<active id="-1" /></window></windows></workbook>

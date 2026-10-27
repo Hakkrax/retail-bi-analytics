@@ -28,3 +28,7 @@ dist/
 .env
 .DS_Store
 Thumbs.db
+
+# Tableau extracts (created locally before publishing)
+tableau/*.hyper
+tableau/**/*.hyper

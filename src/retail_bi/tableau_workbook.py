@@ -35,6 +35,7 @@ WORKBOOK_PATH = TABLEAU_DIR / "retail_dashboard.twb"
 VERSION = "18.1"
 PARAM = "[Parameters].[Parameter 1]"
 DASH_W, DASH_H = 1200, 950
+DEVICE_PREVIEW: list[str] = []  # extra elements after <active> in dashboard windows
 
 GBP = 'c"£"#,##0;-"£"#,##0'
 GBP2 = 'c"£"#,##0.00;-"£"#,##0.00'
@@ -532,9 +533,12 @@ def _windows(sheets: list[Sheet], dashboards: list[Dashboard]) -> str:
     ])
     windows = [tag("window", {"class": "worksheet", "hidden": "true", "maximized": "true", "name": s.name}, [cards])
                for s in sheets]
+    # Tableau's schema: a dashboard window is (viewpoints, active, device-preview).
     for i, d in enumerate(dashboards):
+        viewpoints = tag("viewpoints", None,
+                         [tag("viewpoint", {"name": z.sheet}) for z in d.zones if z.kind == "sheet"])
         windows.append(tag("window", {"class": "dashboard", "maximized": "true" if i == 0 else None,
-                                      "name": d.name}, [tag("active", {"id": "-1"})]))
+                                      "name": d.name}, [viewpoints, tag("active", {"id": "-1"}), *DEVICE_PREVIEW]))
     return tag("windows", {"source-height": "30"}, windows)
 
 
