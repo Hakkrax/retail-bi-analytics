@@ -1,0 +1,13 @@
+rule,action,rows,line_value,description
+input,count,1067371,19287250.568,raw rows from both workbook sheets
+unparseable,remove,0,0.0,"missing invoice, date, quantity, price or stock code"
+sheet_overlap,remove,22523,377488.45,invoice lines repeated across the two yearly sheets
+exact_duplicate,remove,11814,54780.270000000004,"same product, quantity, price and time repeated on an invoice"
+bad_debt_adjustment,remove,6,-147614.08,"accounting adjustment invoices (prefix A), not sales"
+non_product_code,remove,5863,76273.85800000001,"postage, fees, discounts, vouchers, manual and test codes"
+non_positive_price,remove,5959,0.0,"zero or negative unit price (write-offs, free items)"
+stock_adjustment,remove,0,0.0,negative quantity outside a cancellation invoice
+cancel_positive_qty,remove,0,0.0,cancellation invoice with non-negative quantity
+kept_sale,keep,1003292,19642748.04,valid product sale lines
+kept_cancellation,keep,17914,-716425.97,valid product cancellation lines
+no_customer_id,flag,227045,2568259.38,kept for revenue; excluded from customer KPIs

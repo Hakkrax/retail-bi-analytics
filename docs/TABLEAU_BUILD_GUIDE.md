@@ -1,0 +1,122 @@
+# Tableau Public build guide
+
+The Python pipeline produces every number. Tableau is the presentation layer. This guide takes about 2–3 hours the first time.
+
+**Why Tableau Public and not Power BI?** Power BI's public "Publish to web" needs a work or school Microsoft account; a personal Gmail can't sign up for the Power BI service. Tableau Public is free with any email and gives a public link recruiters can open without signing in. The DAX versions of every measure are in [KPI_DEFINITIONS.md](KPI_DEFINITIONS.md) if you also want a Power BI Desktop version for screenshots.
+
+**Before you start**
+
+1. Run the pipeline: `python -m retail_bi.pipeline`. Check `exports/` has 5 CSV files and `reports/query_results/` has 10.
+2. Install **Tableau Public** (free desktop app) from public.tableau.com and create a free account.
+3. Everything published to Tableau Public is public. That is fine here: the data is CC BY 4.0.
+
+---
+
+## 1. Connect the data
+
+### Source A — Sales model
+1. **Connect → Text file →** `exports/fact_sales_line.csv`.
+2. Drag `dim_product.csv`, `dim_customer.csv`, `dim_date.csv` onto the canvas to create **relationships** (the noodle, not a join):
+   - `fact_sales_line.stock_code` = `dim_product.stock_code`
+   - `fact_sales_line.customer_id` = `dim_customer.customer_id`
+   - `fact_sales_line.invoice_date` = `dim_date.date`
+3. In the data grid, set types:
+   - `customer_id` (both tables) → **String** (Tableau guesses Number; it is an ID).
+   - `stock_code`, `invoice` → String.
+   - `invoice_date`, `dim_date.date` → **Date**. `invoice_ts` → Date & Time.
+   - `country` → Geographic Role → **Country/Region**.
+4. Rename the data source **Sales**.
+
+### Source B — Customer analyses
+Add each as its own data source (**Data → New Data Source → Text file**):
+
+| File (in `reports/query_results/`) | Rename to | Type fixes |
+|---|---|---|
+| `05_customer_rfm.csv` | RFM | `customer_id` → String |
+| `06_cohort_retention.csv` | Cohorts | `months_since_first` → Discrete dimension |
+| `07_new_vs_returning.csv` | New vs Returning | `year_month` → Date |
+| `10_customer_pareto.csv` | Pareto | — |
+
+## 2. Calculated fields (Sales source)
+
+Create these exactly (Analysis → Create Calculated Field). Formulas match [KPI_DEFINITIONS.md](KPI_DEFINITIONS.md).
+
+```
+Gross Sales        SUM(IF [Line Type]="sale" THEN [Line Revenue] END)
+Cancelled Value    SUM(IF [Line Type]="cancellation" THEN [Line Revenue] END)
+Net Revenue        SUM([Line Revenue])
+Orders             COUNTD(IF [Line Type]="sale" THEN [Invoice] END)
+AOV                [Gross Sales] / [Orders]
+Cancellation Rate  -[Cancelled Value] / [Gross Sales]
+Active Customers   COUNTD(IF [Line Type]="sale" THEN [Customer Id] END)
+Units Sold         SUM(IF [Line Type]="sale" THEN [Quantity] END)
+MoM Growth         (ZN([Net Revenue]) - LOOKUP(ZN([Net Revenue]), -1)) / ABS(LOOKUP(ZN([Net Revenue]), -1))
+YoY Growth         (ZN([Net Revenue]) - LOOKUP(ZN([Net Revenue]), -12)) / ABS(LOOKUP(ZN([Net Revenue]), -12))
+```
+
+Formats: money → Currency (custom) `£#,##0`; rates → Percentage, 1 decimal.
+
+## 3. Worksheets
+
+| # | Sheet name | Build |
+|---|---|---|
+| 1 | KPI – Net Revenue | `Net Revenue` on Text. Repeat for Orders, AOV, Cancellation Rate, Active Customers (5 small sheets, one number each). |
+| 2 | Monthly Trend | Columns: `Invoice Date` → continuous **Month**. Rows: `Net Revenue` (line). Filter `Is Complete Month` = True. Tooltip: Net Revenue, Orders, MoM Growth, YoY Growth. |
+| 3 | Top Products | Rows: `Description` (from dim_product). Columns: `Net Revenue` (bar). Sort descending. Filter: Top 15 by Net Revenue. |
+| 4 | Markets | Map: `Country` → Detail, `Net Revenue` → Color (single-hue blue sequential). Add a second sheet "Markets – bar": Country vs Net Revenue, **excluding United Kingdom**, so smaller markets are visible. |
+| 5 | Cancellations by Month | Columns: Month(`Invoice Date`). Rows: `Cancelled Value` (bar, negative). Annotate Jan 2011 and Dec 2011 (the two large cancelled orders). |
+| 6 | Order Timing | Columns: `HOUR(Invoice Ts)`. Rows: `Day Of Week` (sort Mon→Sun). Color: `Orders`. Mark: Square. |
+| 7 | RFM Segments | Source **RFM**. Rows: `Segment`. Columns: `SUM(Monetary)` bar; label with `COUNT(Customer Id)`. |
+| 8 | Cohort Retention | Source **Cohorts**. Rows: `Cohort Month`. Columns: `Months Since First` (filter 1–12). Color & Label: `AVG(Retention Pct)`. Mark: Square. Filter `Cohort Month` ≤ 2010-12. |
+| 9 | Revenue Concentration | Source **Pareto**. Columns: `Top Customers Pct` (discrete). Rows: `Revenue Share Pct` (bar), labels on. |
+| 10 | New vs Returning | Source **New vs Returning**. Columns: Month(`Year Month`). Rows: `Net Revenue`. Color: `Customer Type`. Mark: Area or stacked bar. |
+
+**Colours:** use one blue for single-measure charts. Avoid red/green pairs. Keep gridlines light.
+
+## 4. Dashboards
+
+Size: **Automatic** or Range (min 1000 px wide) plus a **Phone** device layout (Dashboard → Device Preview → Phone → Add layout).
+
+**Dashboard 1 — Sales Overview**
+- Title: "Online Retail — Sales Overview (Dec 2009 – Dec 2011)"
+- Row 1: the 5 KPI sheets.
+- Row 2: Monthly Trend (full width).
+- Row 3: Top Products | Markets map.
+- Filters (apply to all Sales sheets): `Invoice Date` range, `Country`.
+- Footer text: "Source: Chen, D. (2012) Online Retail II, UCI ML Repository, CC BY 4.0. Net revenue = sales − cancellations. No cost data, so no margin."
+
+**Dashboard 2 — Customers**
+- RFM Segments | Revenue Concentration
+- Cohort Retention (full width)
+- New vs Returning
+- Text box with 3 insights from the README ("Top 1% of customers = 31% of revenue", "813 at-risk customers = £1.52M historical revenue", "Median next-month retention ≈ 20%").
+
+**Dashboard 3 — Operations**
+- Cancellations by Month | Order Timing heatmap
+- Markets – bar (non-UK)
+
+Optional: combine into a **Story** with one caption per dashboard.
+
+## 5. Check before publishing
+
+Compare against `reports/kpi_summary.json` with no filters applied:
+
+| Field | Expected |
+|---|---|
+| Net Revenue | £18,926,322 |
+| Gross Sales | £19,642,748 |
+| Cancelled Value | −£716,426 |
+| Orders | 39,516 |
+| AOV | £497.08 |
+| Cancellation Rate | 3.6–3.7% |
+| Active Customers | 5,852 |
+
+If a number differs, the usual causes are a **join** instead of a relationship (it can duplicate fact rows), a leftover filter, or `Is Complete Month` applied to a KPI sheet (it removes December 2011).
+
+## 6. Publish
+
+1. **File → Save to Tableau Public As…** → name: `Online Retail Sales & Customer Analytics`.
+2. On the published page: add a description, tags (`SQL`, `Python`, `RFM`, `Cohort Analysis`, `Retail`), and a link to the GitHub repo.
+3. Open the link in a private/incognito window to confirm it loads without signing in. Check the phone layout on your phone.
+4. Take screenshots of each dashboard into `docs/figures/dashboard_*.png`.
+5. Put the link in `README.md` (top) and tell me — I'll check it opens and wire it into the portfolio site.

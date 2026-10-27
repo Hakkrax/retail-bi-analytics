@@ -1,0 +1,15 @@
+{
+  "gross_sales": 19642748.04,
+  "cancelled_value": -716425.97,
+  "net_revenue": 18926322.07,
+  "orders": 39516,
+  "customers": 5852,
+  "products_sold": 4721,
+  "countries": 41,
+  "units_sold": 11187567,
+  "avg_order_value": 497.08,
+  "cancellation_rate_pct": 3.65,
+  "first_date": "2009-12-01",
+  "last_date": "2011-12-09",
+  "build_seconds": 93.9
+}
