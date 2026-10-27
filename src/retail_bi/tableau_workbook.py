@@ -35,6 +35,8 @@ WORKBOOK_PATH = TABLEAU_DIR / "retail_dashboard.twb"
 VERSION = "18.1"
 PARAM = "[Parameters].[Parameter 1]"
 DASH_W, DASH_H = 1200, 950
+EXTRACT_POSITION = "before_layout"  # Tableau 2026.3 schema: after the columns, before <layout>
+EXTRACT_DIR = TABLEAU_DIR / "extracts"
 DEVICE_PREVIEW: list[str] = []  # extra elements after <active> in dashboard windows
 
 GBP = 'c"£"#,##0;-"£"#,##0'
@@ -180,15 +182,72 @@ class Source:
             ]),
         ])
 
-    def xml(self, data_dir: Path) -> str:
-        body = [self.connection_xml(data_dir), tag("aliases", {"enabled": "yes"})]
+    def extract_xml(self, extract_dir: Path) -> str:
+        """Point the data source at its .hyper extract (Tableau Public opens extracts only)."""
+        hyper = (extract_dir / f"{self.stem}.hyper").resolve().as_posix()
+        return tag("extract", {"count": "-1", "enabled": "true", "units": "records"}, [
+            tag("connection", {
+                "access_mode": "readonly", "author-locale": "en_GB", "class": "hyper", "dbname": hyper,
+                "default-settings": "hyper", "schema": "Extract", "sslmode": "", "tablename": "Extract",
+                "update-time": "10/27/2026 12:00:00 PM", "username": "tableau",
+            }, [
+                tag("relation", {"name": "Extract", "table": "[Extract].[Extract]", "type": "table"}),
+                tag("refresh", {"increment-key": "", "incremental-updates": "false"}),
+            ]),
+        ])
+
+    def xml(self, data_dir: Path, extract_dir: Path | None = None) -> str:
+        body = [self.connection_xml(data_dir)]
+        if extract_dir is not None and EXTRACT_POSITION == "after_connection":
+            body.append(self.extract_xml(extract_dir))
+        body.append(tag("aliases", {"enabled": "yes"}))
         body += [c.xml() for c in self.cols.values() if c.caption or c.fmt]
         body += [c.xml() for c in self.calcs]
+        if extract_dir is not None and EXTRACT_POSITION == "before_layout":
+            body.append(self.extract_xml(extract_dir))
         body.append(tag("layout", {"dim-ordering": "alphabetic", "dim-percentage": "0.5",
                                    "measure-ordering": "alphabetic", "measure-percentage": "0.4",
                                    "show-structure": "true"}))
+        if extract_dir is not None and EXTRACT_POSITION == "end":
+            body.append(self.extract_xml(extract_dir))
         return tag("datasource", {"caption": self.caption, "inline": "true", "name": self.name,
                                   "version": VERSION}, body)
+
+    def write_hyper(self, data_dir: Path, extract_dir: Path) -> Path:
+        """Copy the CSV into a Tableau Hyper extract with the same columns and types."""
+        from tableauhyperapi import (Connection, CreateMode, HyperProcess, Inserter, SchemaName,
+                                     SqlType, TableDefinition, TableName, Telemetry)
+
+        types = {"string": SqlType.text(), "integer": SqlType.big_int(), "real": SqlType.double(),
+                 "date": SqlType.date()}
+        frame = pd.read_csv(data_dir / self.filename)
+        table = TableDefinition(TableName("Extract", "Extract"),
+                                [TableDefinition.Column(c.name, types[c.datatype]) for c in self.cols.values()])
+        rows = []
+        for record in frame.itertuples(index=False):
+            row = []
+            for value, col in zip(record, self.cols.values()):
+                if pd.isna(value):
+                    row.append(None)
+                elif col.datatype == "date":
+                    row.append(pd.Timestamp(value).date())
+                elif col.datatype == "integer":
+                    row.append(int(value))
+                elif col.datatype == "real":
+                    row.append(float(value))
+                else:
+                    row.append(str(value))
+            rows.append(row)
+        extract_dir.mkdir(parents=True, exist_ok=True)
+        path = extract_dir / f"{self.stem}.hyper"
+        with HyperProcess(Telemetry.DO_NOT_SEND_USAGE_DATA_TO_TABLEAU) as hyper:
+            with Connection(hyper.endpoint, path, CreateMode.CREATE_AND_REPLACE) as conn:
+                conn.catalog.create_schema(SchemaName("Extract"))
+                conn.catalog.create_table(table)
+                with Inserter(conn, table) as inserter:
+                    inserter.add_rows(rows)
+                    inserter.execute()
+        return path
 
 
 _DERIVATION = {"none": "None", "sum": "Sum", "avg": "Avg", "usr": "User", "tmn": "Month-Trunc"}
@@ -542,10 +601,14 @@ def _windows(sheets: list[Sheet], dashboards: list[Dashboard]) -> str:
     return tag("windows", {"source-height": "30"}, windows)
 
 
-def build(data_dir: Path = TABLEAU_DATA_DIR, out_path: Path = WORKBOOK_PATH) -> Path:
+def build(data_dir: Path = TABLEAU_DATA_DIR, out_path: Path = WORKBOOK_PATH,
+          extract_dir: Path | None = EXTRACT_DIR) -> Path:
+    """Write the workbook. With ``extract_dir`` set, also write .hyper extracts and link them."""
     sources = _sources()
     for src in sources.values():
         src.load_columns(data_dir)
+        if extract_dir is not None:
+            src.write_hyper(data_dir, extract_dir)
     scopes = pd.read_csv(data_dir / "kpi_by_country.csv")["scope"].tolist()
     if scopes[0] != ALL_SCOPE:
         raise ValueError(f"first scope must be {ALL_SCOPE!r}")
@@ -564,7 +627,7 @@ def build(data_dir: Path = TABLEAU_DATA_DIR, out_path: Path = WORKBOOK_PATH) -> 
                 tag("preference", {"name": "ui.encoding.shelf.height", "value": "24"}),
                 tag("preference", {"name": "ui.shelf.height", "value": "26"}),
             ]),
-            tag("datasources", None, [_parameter_xml(scopes)] + [s.xml(data_dir) for s in sources.values()]),
+            tag("datasources", None, [_parameter_xml(scopes)] + [s.xml(data_dir, extract_dir) for s in sources.values()]),
             tag("worksheets", None, [s.xml() for s in sheets]),
             tag("dashboards", None, [d.xml() for d in dashboards]),
             _windows(sheets, dashboards),

@@ -32,3 +32,4 @@ Thumbs.db
 # Tableau extracts (created locally before publishing)
 tableau/*.hyper
 tableau/**/*.hyper
+hyperd*.log

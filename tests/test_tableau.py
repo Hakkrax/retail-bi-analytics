@@ -32,7 +32,7 @@ def extracts(tmp_path, raw_sample):
 @pytest.fixture()
 def workbook(extracts, tmp_path):
     _, _, data_dir = extracts
-    path = tableau_workbook.build(data_dir, tmp_path / "wb.twb")
+    path = tableau_workbook.build(data_dir, tmp_path / "wb.twb", tmp_path / "extracts")
     return ET.parse(path).getroot(), data_dir
 
 
@@ -148,3 +148,20 @@ def test_committed_workbook_matches_generator():
     assert [d.get("name") for d in root.find("dashboards")] == ["Sales Overview", "Customers", "Operations"]
     frame = pd.read_csv(tableau_data.TABLEAU_DATA_DIR / "kpi_by_country.csv")
     assert frame["scope"].iloc[0] == tableau_data.ALL_SCOPE
+
+
+def test_hyper_extracts_match_csv(workbook, tmp_path):
+    """Tableau Public only opens extracts: each data source needs a .hyper with the CSV's rows."""
+    from tableauhyperapi import Connection, HyperProcess, TableName, Telemetry
+
+    root, data_dir = workbook
+    sources = [ds for ds in root.find("datasources") if ds.get("name") != "Parameters"]
+    with HyperProcess(Telemetry.DO_NOT_SEND_USAGE_DATA_TO_TABLEAU) as hyper:
+        for ds in sources:
+            children = [c.tag for c in ds]
+            assert children.index("extract") == children.index("layout") - 1  # schema position
+            path = Path(ds.find("extract/connection").get("dbname"))
+            csv = data_dir / ds.find(".//connection[@class='textscan']").get("filename")
+            with Connection(hyper.endpoint, path) as conn:
+                count = conn.execute_scalar_query(f"SELECT COUNT(*) FROM {TableName('Extract', 'Extract')}")
+            assert count == len(pd.read_csv(csv)), path.name

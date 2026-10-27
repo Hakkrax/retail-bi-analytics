@@ -3,3 +3,4 @@ openpyxl==3.1.5
 pyarrow==26.0.0
 matplotlib==3.9.2
 pytest==8.3.3
+tableauhyperapi==0.0.26963
