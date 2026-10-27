@@ -1,5 +1,9 @@
 # Retail Sales & Customer Analytics
 
+[![tests](https://github.com/Hakkrax/retail-bi-analytics/actions/workflows/tests.yml/badge.svg)](https://github.com/Hakkrax/retail-bi-analytics/actions/workflows/tests.yml)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
+![Data licence](https://img.shields.io/badge/data-CC%20BY%204.0-lightgrey)
+
 End-to-end BI project on 1.07 million real invoice lines from a UK online gift wholesaler: Python data cleaning with a full audit trail, a SQLite star schema, ten documented SQL analyses, and an interactive Tableau Public dashboard.
 
 > **Live dashboard:** _not yet published — see [docs/TABLEAU_BUILD_GUIDE.md](docs/TABLEAU_BUILD_GUIDE.md)_
