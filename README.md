@@ -6,10 +6,17 @@
 
 End-to-end BI project on 1.07 million real invoice lines from a UK online gift wholesaler: Python data cleaning with a full audit trail, a SQLite star schema, ten documented SQL analyses, and an interactive Tableau Public dashboard.
 
-> **Live dashboard:** _not yet published — see [docs/TABLEAU_BUILD_GUIDE.md](docs/TABLEAU_BUILD_GUIDE.md)_
+> **Live dashboard:** [Tableau Public](https://public.tableau.com/app/profile/faheem.niyas/viz/retail_dashboard_17931009730360/SalesOverview) (3 dashboards: Sales Overview, Customers, Operations)
 > **Case study:** [docs/CASE_STUDY.md](docs/CASE_STUDY.md)
 
-![Net revenue by month](docs/figures/monthly_net_revenue.png)
+[![Sales Overview dashboard](docs/figures/dashboard_sales_overview.png)](https://public.tableau.com/app/profile/faheem.niyas/viz/retail_dashboard_17931009730360/SalesOverview)
+
+<details><summary>Customers and Operations dashboards</summary>
+
+![Customers dashboard](docs/figures/dashboard_customers.png)
+![Operations dashboard](docs/figures/dashboard_operations.png)
+
+</details>
 
 ## Business questions
 
